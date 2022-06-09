@@ -1,0 +1,26 @@
+{% extends 'memories/base.html' %}
+{% block extrascript %}
+    <script src="https://api-maps.yandex.ru/2.1/?apikey={{ api_key_yandex }}&lang=ru_RU"
+            type="text/javascript"></script>
+    <script type="text/javascript">
+        ymaps.ready(init);
+        function init() {
+            let myMap = new ymaps.Map("map", {
+                center: [56.82, 60.65],
+                zoom: 10
+            });
+        }
+        function functionToExecute() {
+            document.getElementById("map").style.display = 'block';
+        }
+    </script>
+{% endblock %}
+
+{% block title %}
+Мой профиль
+{% endblock %}
+
+{% block content %}
+    <div id="map" style="width: 800px; height: 500px; display: none; "></div>
+    <button onclick="functionToExecute()">Добавить воспоминание</button>
+{% endblock %}
