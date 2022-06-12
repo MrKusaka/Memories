@@ -37,7 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'memories'
+    'memories',
+    'social_django',
+    'social_django_mongoengine',
 ]
 
 
@@ -65,6 +67,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
             ],
         },
     },
@@ -125,5 +128,21 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+SOCIAL_AUTH_STORAGE = 'social_django_mongoengine.models.DjangoStorage'
 
+SOCIAL_AUTH_JSONFIELD_ENABLED = True
 
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.vk.VKOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+SOCIAL_AUTH_AUTHENTICATION_BACKENDS = (
+    'social_core.backends.vk.VKontakteOpenAPI',
+)
+
+SOCIAL_AUTH_URL_NAMESPACE = 'login'
+
+LOGIN_REDIRECT_URL = '/'
+
+APP_ID = '8187504'

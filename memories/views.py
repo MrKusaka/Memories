@@ -1,9 +1,27 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from .models import Task
-import requests
 import vk
-import vk_api
-import json
+from django.views.generic.edit import FormView
+from memories.forms import LoginForm
+from django.conf import settings
+
+
+class LoginFormView(FormView):
+    template_name = 'memories/index.html'
+    form_class = LoginForm
+    success_url = 'myProfile'
+
+    def auth_vk_password(self, login, password):
+        session = vk.AuthSession(app_id=settings.APP_ID,
+                                 user_login=login,
+                                 user_password=password)
+        file = open("auth_vk.ini", 'w')
+        file.writelines(session.access_token)
+        return session
+
+    def form_valid(self, form):
+        self.auth_vk_password(form.cleaned_data['login'], form.cleaned_data['password'])
+        return super().form_valid(form)
 
 
 def index(request):
@@ -11,17 +29,5 @@ def index(request):
     return render(request, 'memories/index.html', {'title': 'Главная страница сайта', 'tasks': tasks})
 
 
-# def auth_vk_password():
-#     session = vk.AuthSession(app_id=APP_ID,
-#                              user_login=input("user_login: "),
-#                              user_password=input("user_password: "))
-#     file = open("auth_vk.ini", 'w')
-#     file.writelines(session.access_token)
-#     return session
-
-
 def myProfile(request):
-    f = open('C:\\Users\\wow_l\\PycharmProjects\\djangoProject\\memories\\keys.json')
-    api_key = json.load(f)
-    return render(request, 'memories/myProfile.html', {'api_key_yandex': api_key['api_key_yandex']})
-
+    return render(request, 'memories/myProfile.html')
