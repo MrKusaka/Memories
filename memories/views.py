@@ -1,3 +1,5 @@
+import json
+
 from django.shortcuts import render
 from .models import Task
 import vk
@@ -30,4 +32,5 @@ def index(request):
 
 
 def myProfile(request):
-    return render(request, 'memories/myProfile.html')
+    with open(str(settings.BASE_DIR) + '\\memories\\keys.json', "r") as f:
+        return render(request, 'memories/myProfile.html', {'api_key_yandex': json.load(f)['api_key_yandex']})
