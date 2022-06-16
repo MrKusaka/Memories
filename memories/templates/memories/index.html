@@ -1,7 +1,11 @@
 {% extends 'memories/base.html' %}
 
 {% block title %}
-{{ title }}
+Главная страница сайта
+{% endblock %}
+
+{% block extrastyle %}
+    <style>#id_login, #id_password {width: 250px;  border-radius: .25rem;}</style>
 {% endblock %}
 
 {% block content %}
@@ -10,9 +14,9 @@
     <h3>Напиши комментарий, который заставит вспомнить тебя о прекрасных днях, проведенных там.</h3>
     <h3>Или же просто отмечай, чтоб не забыть;)</h3>
     <h3>Авторизируйся ниже и начинай добавлять свои воспоминания</h3>
-    <form method="post">
+    <form style=" float: left;"  method="post">
         {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Войти">
+        <div style="text-align: right" >{{ form.as_p }}</div>
+        <input style="margin-left: 300px" type="submit" value="Войти">
     </form>
 {% endblock %}

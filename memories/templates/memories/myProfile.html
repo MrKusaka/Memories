@@ -5,75 +5,130 @@
     <script type="text/javascript">
         ymaps.ready(init);
         function init() {
-            let myPlacemark,
-                myMap = new ymaps.Map('map', {
+            let myPlacemark, myMap = new ymaps.Map('map', {
                 center: [56.82, 60.65],
                 zoom: 10,
                 controls: ['zoomControl', 'geolocationControl', 'searchControl'],
                 searchControlProvider: 'yandex#search'
             });
 
-        myMap.events.add('click', function (e) {
-            let coords = e.get('coords');
-
-            // Если метка уже создана – просто передвигаем ее.
-            if (myPlacemark) {
-                myPlacemark.geometry.setCoordinates(coords);
-            }
-            // Если нет – создаем.
-            else {
-                myPlacemark = createPlacemark(coords);
-                myMap.geoObjects.add(myPlacemark);
-                // Слушаем событие окончания перетаскивания на метке.
-                myPlacemark.events.add('dragend', function () {
-                    getAddress(myPlacemark.geometry.getCoordinates());
-                });
-        }
-        getAddress(coords);
-    });
-
-        // Создание метки.
-        function createPlacemark(coords) {
-            return new ymaps.Placemark(coords, {
-                iconCaption: 'поиск...'
-            }, {
-                preset: 'islands#violetDotIconWithCaption',
-                draggable: true
-            });
-        }
-
-        // Определяем адрес по координатам (обратное геокодирование).
-        function getAddress(coords) {
-            myPlacemark.properties.set('iconCaption', 'поиск...');
-            ymaps.geocode(coords).then(function (res) {
-                let firstGeoObject = res.geoObjects.get(0);
-
-                myPlacemark.properties
-                    .set({
-                        // Формируем строку с данными об объекте.
-                        iconCaption: [
-                            // Название населенного пункта или вышестоящее административно-территориальное образование.
-                            firstGeoObject.getLocalities().length ? firstGeoObject.getLocalities() : firstGeoObject.getAdministrativeAreas(),
-                            // Получаем путь до топонима, если метод вернул null, запрашиваем наименование здания.
-                            firstGeoObject.getThoroughfare() || firstGeoObject.getPremise()
-                        ].filter(Boolean).join(', '),
-                        // В качестве контента балуна задаем строку с адресом объекта.
-                        balloonContent: firstGeoObject.getAddressLine()
+            myMap.events.add('click', function (e) {
+                let coords = e.get('coords');
+                console.log(coords)
+                document.getElementById('id_latitude').value = coords[0];
+                document.getElementById('id_longitude').value = coords[1];
+                document.getElementById("memory_place").style.display = 'block';
+                // Если метка уже создана – просто передвигаем ее.
+                if (myPlacemark) {
+                    myPlacemark.geometry.setCoordinates(coords);
+                }
+                // Если нет – создаем.
+                else {
+                    myPlacemark = createPlacemark(coords);
+                    myMap.geoObjects.add(myPlacemark);
+                    // Слушаем событие окончания перетаскивания на метке.
+                    myPlacemark.events.add('dragend', function () {
+                        getAddress(myPlacemark.geometry.getCoordinates());
                     });
+                }
+                getAddress(coords);
             });
+
+            // Создание метки.
+            function createPlacemark(coords) {
+                return new ymaps.Placemark(coords, {
+                    iconCaption: 'поиск...'
+                }, {
+                    preset: 'islands#violetDotIconWithCaption',
+                    draggable: true
+                });
+            }
+
+            // Определяем адрес по координатам (обратное геокодирование).
+            function getAddress(coords) {
+                myPlacemark.properties.set('iconCaption', 'поиск...');
+                ymaps.geocode(coords).then(function (res) {
+                    let firstGeoObject = res.geoObjects.get(0);
+                    myPlacemark.properties
+                        .set({
+                            // Формируем строку с данными об объекте.
+                            iconCaption: [
+                                // Название населенного пункта или вышестоящее административно-территориальное образование.
+                                firstGeoObject.getLocalities().length ? firstGeoObject.getLocalities() : firstGeoObject.getAdministrativeAreas(),
+                                // Получаем путь до топонима, если метод вернул null, запрашиваем наименование здания.
+                                firstGeoObject.getThoroughfare() || firstGeoObject.getPremise()
+                            ].filter(Boolean).join(', '),
+                            // В качестве контента балуна задаем строку с адресом объекта.
+                            balloonContent: firstGeoObject.getAddressLine()
+                        });
+                });
+            }
+            function Test1(latitude, longitude, place) {
+            myGeoObject = new ymaps.GeoObject({
+                // Описание геометрии.
+                geometry: {
+                    type: "Point",
+                    coordinates: [latitude, longitude]
+                },
+                // Свойства.
+                properties: {
+                    // Контент метки.
+                    hintContent: place
+                }
+            });
+            myMap.geoObjects.add(myGeoObject)
         }
-}
+        {% for memory in memories %}
+            Test1({{ memory.latitude|stringformat:".2f" }},{{ memory.longitude|stringformat:".2f" }},"{{ memory.place }}")
+        {% endfor %}
+        }
         function functionToExecute() {
             document.getElementById("map").style.display = 'block';
         }
     </script>
+
 {% endblock %}
 
 {% block title %}
 Мой профиль
 {% endblock %}
 
+{% block extrastyle %}
+    {{ block.super }}
+    <style>#id_place, #id_comments {width: 400px; margin: 0}</style>
+    <style> table {
+  border-collapse: separate;
+  border-spacing: 70px 0; max-width: 1000px}</style>
+{% endblock %}
+
 {% block content %}
-    <div id="map" style="width: 800px; height: 500px; display: none; "></div>
-    <button onclick="functionToExecute()">Добавить воспоминание</button>
+    <div class="form-group" >
+       <div id="memory_place" style="display: none">
+           <form style="float: right; text-align: right" method="post">
+                {% csrf_token %}
+                {% for hidden in form.hidden_fields %}
+                    {{ hidden }}
+                {% endfor %}
+                <div style="text-align: left;">{{ form.place.label }}</div><div>{{ form.place }}</div><br>
+                <div style="text-align: left;">{{ form.comments.label }}</div><div>{{ form.comments }}</div><br>
+                <input type="submit" value="Сохранить">
+            </form>
+        </div>
+        <div id="map" style="width: 900px; height: 600px; display: none; margin-left: -300px;"></div>
+        <button onclick="functionToExecute()">Добавить воспоминание</button>
+    </div>
+    <div style="margin-left: -200px">
+        <table>
+            <th>№</th>
+            <th>Мои воспоминания</th>
+            <th>Описания воспоминания</th>
+            {% for memory in memories %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ memory.place }}</td>
+                    <td>{{ memory.comments }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
 {% endblock %}

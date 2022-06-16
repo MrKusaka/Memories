@@ -7,13 +7,15 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+    {% block extrastyle %}
+    {% endblock %}
     {% block extrascript %}{% endblock %}
 </head>
 <body>
-    <div class="navbar navbar-dark bg-dark shadow-sm">
+    <nav class="navbar navbar-dark bg-dark shadow-sm">
         <a class="p-2 text-white" href="{% url 'home' %}">Главная</a>
         <a class="p-2 text-white" href="{% url 'myProfile' %}">Мой профиль</a>
-    </div>
+    </nav>
     <div class="container">
         {% block content %}{% endblock %}
     </div>

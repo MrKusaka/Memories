@@ -1,11 +1,9 @@
-import json
-
-from django.shortcuts import render
-from .models import Task
 import vk
 from django.views.generic.edit import FormView
-from memories.forms import LoginForm
 from django.conf import settings
+
+from memories.forms import LoginForm, MakeMemory
+from .models import Memory
 
 
 class LoginFormView(FormView):
@@ -26,11 +24,18 @@ class LoginFormView(FormView):
         return super().form_valid(form)
 
 
-def index(request):
-    tasks = Task.objects.order_by('-id')
-    return render(request, 'memories/index.html', {'title': 'Главная страница сайта', 'tasks': tasks})
+class MyProfile(FormView):
+    template_name = 'memories/myProfile.html'
+    form_class = MakeMemory
+    success_url = 'myProfile'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['api_key_yandex'] = getattr(settings, "API_KEY_YANDEX", "7c1e4364-08b4-4ec3-b1e8-dc0369119139")
+        context['memories'] = Memory.objects.all()
+        return context
 
-def myProfile(request):
-    with open(str(settings.BASE_DIR) + '\\memories\\keys.json', "r") as f:
-        return render(request, 'memories/myProfile.html', {'api_key_yandex': json.load(f)['api_key_yandex']})
+    def form_valid(self, form):
+        form.save()
+        print(form.cleaned_data)
+        return super().form_valid(form)

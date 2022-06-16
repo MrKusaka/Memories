@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'memories',
     'social_django',
     'social_django_mongoengine',
+    'widget_tweaks',
 ]
 
 

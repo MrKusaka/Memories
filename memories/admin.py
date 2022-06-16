@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import Task
+from .models import Memory
 
 
-admin.site.register(Task)
+@admin.register(Memory)
+class MemoryAdmin(admin.ModelAdmin):
+    list_display = ['place', 'comments', 'latitude', 'longitude']
