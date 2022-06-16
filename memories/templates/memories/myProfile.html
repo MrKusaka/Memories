@@ -1,4 +1,6 @@
 {% extends 'memories/base.html' %}
+{% load crispy_forms_tags %}
+
 {% block extrascript %}
     <script src="https://api-maps.yandex.ru/2.1/?apikey={{ api_key_yandex }}&lang=ru_RU"
             type="text/javascript"></script>
@@ -14,7 +16,6 @@
 
             myMap.events.add('click', function (e) {
                 let coords = e.get('coords');
-                console.log(coords)
                 document.getElementById('id_latitude').value = coords[0];
                 document.getElementById('id_longitude').value = coords[1];
                 document.getElementById("memory_place").style.display = 'block';
@@ -82,11 +83,11 @@
             Test1({{ memory.latitude|stringformat:".2f" }},{{ memory.longitude|stringformat:".2f" }},"{{ memory.place }}")
         {% endfor %}
         }
-        function functionToExecute() {
+        function functionToExecute(self) {
             document.getElementById("map").style.display = 'block';
+            self.style.display = 'none';
         }
     </script>
-
 {% endblock %}
 
 {% block title %}
@@ -95,40 +96,58 @@
 
 {% block extrastyle %}
     {{ block.super }}
-    <style>#id_place, #id_comments {width: 400px; margin: 0}</style>
-    <style> table {
-  border-collapse: separate;
-  border-spacing: 70px 0; max-width: 1000px}</style>
+    <style>
+        table {
+            border-collapse: separate;
+            border-spacing: 5px 5px;
+            max-width: 1000px;
+            width: 100%;
+            background: lightskyblue;
+            color: black;
+            font-family: cursive
+        }
+        .requiredField {
+            float: left;
+        }
+        td, th {
+            background: lightblue;
+            padding: 5px;
+        }
+    </style>
 {% endblock %}
 
 {% block content %}
-    <div class="form-group" >
-       <div id="memory_place" style="display: none">
-           <form style="float: right; text-align: right" method="post">
-                {% csrf_token %}
-                {% for hidden in form.hidden_fields %}
-                    {{ hidden }}
+    <div style="margin-left: -200px">
+        {% if memories %}
+            <table>
+                <caption style="caption-side: top; text-align: center; font-size: 30px;"><b>Мои воспоминания</b></caption>
+                <col style="width:1%">
+                <col style="width:10%">
+                <col style="width:50%">
+                <th>№</th>
+                <th>Название</th>
+                <th>Описание</th>
+                {% for memory in memories %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ memory.place }}</td>
+                        <td>{{ memory.comments }}</td>
+                    </tr>
                 {% endfor %}
-                <div style="text-align: left;">{{ form.place.label }}</div><div>{{ form.place }}</div><br>
-                <div style="text-align: left;">{{ form.comments.label }}</div><div>{{ form.comments }}</div><br>
-                <input type="submit" value="Сохранить">
+            </table>
+        {% else %}
+            <div class="blueborder" style="caption-side: top; text-align: center; font-size: 30px; margin-left: 150px; margin-top: 50px;">У вас нет ни одного воспоминания</div>
+        {% endif %}
+    </div>
+    <div class="form-group" >
+        <div id="memory_place" style="display: none; margin-right: -150px;">
+            <form class="blueborder" style="float: right; text-align: right; background: lightblue; padding: 7px;" method="post">
+                {% csrf_token %}
+                <div>{{ form|crispy }}</div>
+                <button type="submit" class="btn btn-success">Сохранить</button>
             </form>
         </div>
-        <div id="map" style="width: 900px; height: 600px; display: none; margin-left: -300px;"></div>
-        <button onclick="functionToExecute()">Добавить воспоминание</button>
-    </div>
-    <div style="margin-left: -200px">
-        <table>
-            <th>№</th>
-            <th>Мои воспоминания</th>
-            <th>Описания воспоминания</th>
-            {% for memory in memories %}
-                <tr>
-                    <td>{{ forloop.counter }}</td>
-                    <td>{{ memory.place }}</td>
-                    <td>{{ memory.comments }}</td>
-                </tr>
-            {% endfor %}
-        </table>
+        <div class="blueborder" id="map" style="width: 900px; height: 600px; display: none;margin-top: 30px; margin-left: -150px;"></div>
+        <button style=" margin-left: 425px; margin-top: 150px" type="submit" class="btn btn-primary" onclick="functionToExecute(this)">Добавить воспоминание</button>
     </div>
 {% endblock %}

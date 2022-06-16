@@ -31,11 +31,10 @@ class MyProfile(FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['api_key_yandex'] = getattr(settings, "API_KEY_YANDEX", "7c1e4364-08b4-4ec3-b1e8-dc0369119139")
+        context['api_key_yandex'] = settings.API_KEY_YANDEX
         context['memories'] = Memory.objects.all()
         return context
 
     def form_valid(self, form):
         form.save()
-        print(form.cleaned_data)
         return super().form_valid(form)

@@ -27,6 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # Application definition
 
@@ -41,6 +42,7 @@ INSTALLED_APPS = [
     'social_django',
     'social_django_mongoengine',
     'widget_tweaks',
+    'crispy_forms',
 ]
 
 
@@ -146,4 +148,8 @@ SOCIAL_AUTH_URL_NAMESPACE = 'login'
 
 LOGIN_REDIRECT_URL = '/'
 
+# ID приложения для аутентификации в VK
 APP_ID = '8187504'
+
+# API key, используется для яндекс карт
+API_KEY_YANDEX = '7c1e4364-08b4-4ec3-b1e8-dc0369119139'

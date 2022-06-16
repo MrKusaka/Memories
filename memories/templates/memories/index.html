@@ -1,22 +1,29 @@
 {% extends 'memories/base.html' %}
+{% load crispy_forms_tags %}
 
 {% block title %}
 Главная страница сайта
 {% endblock %}
 
 {% block extrastyle %}
-    <style>#id_login, #id_password {width: 250px;  border-radius: .25rem;}</style>
+    {{ block.super }}
+    <style>
+        h3{text-align: justify}
+    </style>
 {% endblock %}
 
 {% block content %}
-    <h3>Привет, дорогой друг! Хочешь с теплотой вспоминать все места, в которых ты бывал? Или же просто хочешь увидеть все наглядно? Тогда тебе сюда.</h3>
-    <h3>Здесь, ты можешь выбрать любое место на карте, в которым ты находился. Добавь название, ассоциируемое с этим местом.</h3>
-    <h3>Напиши комментарий, который заставит вспомнить тебя о прекрасных днях, проведенных там.</h3>
-    <h3>Или же просто отмечай, чтоб не забыть;)</h3>
-    <h3>Авторизируйся ниже и начинай добавлять свои воспоминания</h3>
-    <form style=" float: left;"  method="post">
+    <h3>
+        Привет, дорогой друг! Хочешь с теплотой вспоминать все места, в которых ты бывал? Или же просто увидеть всё наглядно? Тогда тебе сюда.<br>
+        Здесь, ты можешь выбрать любое место на карте, в котором ты находился. Добавь название, ассоциируемое с этим местом.
+        Напиши комментарий, который заставит вспомнить тебя о прекрасных днях, проведенных там.
+        Или же просто отмечай, чтоб не забыть;)<br>
+        Авторизируйся ниже и начинай добавлять свои воспоминания.<br>
+    </h3>
+    <form style=" float: left;"  method="post" >
         {% csrf_token %}
-        <div style="text-align: right" >{{ form.as_p }}</div>
-        <input style="margin-left: 300px" type="submit" value="Войти">
+        <div class="blueborder" style="text-align: left; background: lightblue; padding: 7px; margin-left: 400px; margin-top: 100px" >{{ form|crispy }}
+            <button style="margin-left: 180px" type="submit" class="btn btn-primary">Войти</button>
+        </div>
     </form>
 {% endblock %}

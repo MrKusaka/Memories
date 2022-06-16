@@ -4,8 +4,8 @@ from .models import Memory
 
 
 class LoginForm(forms.Form):
-    login = forms.CharField(label='Логин')
-    password = forms.CharField(label='Пароль', widget=forms.PasswordInput())
+    login = forms.CharField(label='Логин:')
+    password = forms.CharField(label='Пароль:', widget=forms.PasswordInput())
 
 
 class MakeMemory(forms.ModelForm):
