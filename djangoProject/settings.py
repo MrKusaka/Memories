@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+from django.contrib.messages import constants as messages
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -43,6 +44,7 @@ INSTALLED_APPS = [
     'social_django_mongoengine',
     'widget_tweaks',
     'crispy_forms',
+    'bootstrap4'
 ]
 
 
@@ -120,6 +122,12 @@ USE_I18N = True
 
 USE_TZ = True
 
+MESSAGE_TAGS = {
+    messages.INFO: '',
+    50: 'critical',
+}
+
+MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
@@ -142,11 +150,18 @@ AUTHENTICATION_BACKENDS = (
 
 SOCIAL_AUTH_AUTHENTICATION_BACKENDS = (
     'social_core.backends.vk.VKontakteOpenAPI',
+    'social_core.backends.vk.VKOAuth2',
+    'django.contrib.auth.backends.ModelBackend'
 )
+
+SOCIAL_AUTH_VK_OAUTH2_SCOPE = ['email']
 
 SOCIAL_AUTH_URL_NAMESPACE = 'login'
 
 LOGIN_REDIRECT_URL = '/'
+
+SOCIAL_AUTH_VK_OAUTH2_KEY = '8187504'
+SOCIAL_AUTH_VK_OAUTH2_SECRET = 'cXBXIPUVipmGYsiFEVde'
 
 # ID приложения для аутентификации в VK
 APP_ID = '8187504'

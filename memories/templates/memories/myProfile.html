@@ -1,4 +1,5 @@
 {% extends 'memories/base.html' %}
+{% load crispy_forms_filters %}
 {% load crispy_forms_tags %}
 
 {% block extrascript %}
@@ -96,6 +97,7 @@
 
 {% block extrastyle %}
     {{ block.super }}
+
     <style>
         table {
             border-collapse: separate;
@@ -120,24 +122,28 @@
     <div style="margin-left: -200px">
         {% if memories %}
             <table>
-                <caption style="caption-side: top; text-align: center; font-size: 30px;"><b>Мои воспоминания</b></caption>
-                <col style="width:1%">
+                <caption style="caption-side: top; text-align: center; font-size: 30px;"><b>Мои воспоминания</b> </caption>
+                <col style="width:1%" >
                 <col style="width:10%">
                 <col style="width:50%">
                 <th>№</th>
-                <th>Название</th>
+                <th>Название </th>
                 <th>Описание</th>
                 {% for memory in memories %}
                     <tr>
-                        <td>{{ forloop.counter }}</td>
+                        <td>{{ forloop.counter }} </td>
                         <td>{{ memory.place }}</td>
-                        <td>{{ memory.comments }}</td>
+                        <td>{{ memory.comments }} </td>
                     </tr>
                 {% endfor %}
             </table>
         {% else %}
+            <h3 style="margin-left: 150px"> Добрый день {{ user }}!</h3>
             <div class="blueborder" style="caption-side: top; text-align: center; font-size: 30px; margin-left: 150px; margin-top: 50px;">У вас нет ни одного воспоминания</div>
         {% endif %}
+
+{#        Кнопка удаления воспоминания#}
+{#        <input style="margin-left: 910px; margin-top: 20px" class="btn btn-default btn-danger" name="delete" type="submit" value="Удалить"/>#}
     </div>
     <div class="form-group" >
         <div id="memory_place" style="display: none; margin-right: -150px;">
@@ -150,4 +156,5 @@
         <div class="blueborder" id="map" style="width: 900px; height: 600px; display: none;margin-top: 30px; margin-left: -150px;"></div>
         <button style=" margin-left: 425px; margin-top: 150px" type="submit" class="btn btn-primary" onclick="functionToExecute(this)">Добавить воспоминание</button>
     </div>
+    <a style="margin-left: 900px; " class="btn btn-default btn-danger" href="{% url 'home' %}">Выйти</a>
 {% endblock %}

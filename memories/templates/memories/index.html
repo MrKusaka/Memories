@@ -14,7 +14,7 @@
 
 {% block content %}
     <h3>
-        Привет, дорогой друг! Хочешь с теплотой вспоминать все места, в которых ты бывал? Или же просто увидеть всё наглядно? Тогда тебе сюда.<br>
+        Привет, Дорогой друг! Хочешь с теплотой вспоминать все места, в которых ты бывал? Или же просто увидеть всё наглядно? Тогда тебе сюда.<br>
         Здесь, ты можешь выбрать любое место на карте, в котором ты находился. Добавь название, ассоциируемое с этим местом.
         Напиши комментарий, который заставит вспомнить тебя о прекрасных днях, проведенных там.
         Или же просто отмечай, чтоб не забыть;)<br>
@@ -22,8 +22,13 @@
     </h3>
     <form style=" float: left;"  method="post" >
         {% csrf_token %}
+
         <div class="blueborder" style="text-align: left; background: lightblue; padding: 7px; margin-left: 400px; margin-top: 100px" >{{ form|crispy }}
             <button style="margin-left: 180px" type="submit" class="btn btn-primary">Войти</button>
+            <a style="margin-left: -250px" href="{% url 'register' %}">Регистрация</a>
+
+{#            <a style="margin-left: -250px" href="/login/vk-oauth2"><img src="/static/lvk.png" class="avatar-3" data-toggle="tooltip" title="login"></a>#}
+
         </div>
     </form>
 {% endblock %}
